@@ -2,6 +2,7 @@ import {getApps, initializeApp} from 'firebase/app';
 import {getAuth, onAuthStateChanged } from "firebase/auth";
 import {getFirestore} from "@firebase/firestore";
 import {getStorage} from "@firebase/storage";
+import { collection } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: "AIzaSyCF-MVXnzDMFGTbp9Q4XNjvYKeXD71D16I",
@@ -21,7 +22,7 @@ if (!getApps().length) {
 const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
 export const firestore = getFirestore(firebaseApp);
-export const storage = getStorage(firebaseApp)
+export const storage = getStorage(firebaseApp);
 
 onAuthStateChanged(auth, user => {
     // Check for user status
