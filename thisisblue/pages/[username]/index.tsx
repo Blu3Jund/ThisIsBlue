@@ -1,10 +1,12 @@
 import UserProfile from "../../components/UserProfile";
 import PostFeed from "../../components/PostFeed";
 import {getUserWithUsername, postToJSON} from "../../lib/firebase1";
-import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "@firebase/firestore";
+import {collection, getDocs, getFirestore, limit, orderBy, where} from "@firebase/firestore";
+import {query as fireQuery} from "@firebase/firestore";
 
-export async function getServerSideProps({ queryUsername }) {
-    const { username } = queryUsername;
+export async function getServerSideProps({ query }) {
+
+    const { username } = query;
 
     const userDoc = await getUserWithUsername(username);
 
@@ -21,14 +23,13 @@ export async function getServerSideProps({ queryUsername }) {
 
     if (userDoc) {
         user = userDoc; ///TODO This was user = userDoc.data() in Firestore v8, but not sure what to do for v9
-        const postQuery = query(
+        const postQuery = fireQuery(
             collection(getFirestore(), 'posts'),
             where('published', '==', true),
             orderBy('createdAt', "desc"),
             limit(5));
-        posts = (await getDocs(postQuery)).docs.map(postToJSON);
-
-        // posts = querySnapshot.docs.map(postToJSON)
+        const querySnapshot = await getDocs(postQuery)
+        posts = querySnapshot.docs.map(postToJSON)
     }
 
     return {

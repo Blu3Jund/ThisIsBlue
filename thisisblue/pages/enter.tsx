@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce';
 import {getFirestore} from "@firebase/firestore";
 
 
-export default function EnterPage({}) {
+export default function EnterPage() {
     const {user, username } = useContext(UserContext);
 
     // 1. user signed out < SignInButton />

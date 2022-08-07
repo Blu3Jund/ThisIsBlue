@@ -47,7 +47,7 @@ export async function getUserWithUsername(username) {
     return userDoc;
 }
 
-/**`
+/**
  * Converts a firestore document to JSON
  * @param  {DocumentSnapshot} doc
  */
