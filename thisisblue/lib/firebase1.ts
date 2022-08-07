@@ -1,8 +1,7 @@
-import {getApp, getApps, initializeApp} from 'firebase/app';
-import {getAuth, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
+import {getApp, initializeApp} from 'firebase/app';
+import {getAuth, GoogleAuthProvider } from "firebase/auth";
 import {collection, getDocs, getFirestore, limit, query, where} from "@firebase/firestore";
 import {getStorage} from "@firebase/storage";
-import {getDoc} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCF-MVXnzDMFGTbp9Q4XNjvYKeXD71D16I",
@@ -11,7 +10,7 @@ const firebaseConfig = {
     storageBucket: "thisisblue.appspot.com",
     messagingSenderId: "40898048667",
     appId: "1:40898048667:web:010430ecf60b63c59f4c3e",
-    measurementId: "G-1VMRH36C6Y"
+    // measurementId: "G-1VMRH36C6Y"
 }
 
 
@@ -32,11 +31,6 @@ export const googleAuthProvider = new GoogleAuthProvider();
 export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 
-// onAuthStateChanged(auth, user => {
-//     // Check for user status
-// });
-// console.log('The firebase object: ' + firebase.getApps())
-
 //Helper functions
 
 /**`
@@ -45,12 +39,11 @@ export const storage = getStorage(firebaseApp);
  */
 export async function getUserWithUsername(username) {
 
-
     const usersRef = collection(firestore, 'users');
     // const text = await getDoc(usersRef)
     // console.log("userRef.id: " + await getDoc(usersRef));
     const queryUserWithUsername = query(usersRef, where('username', '==', username), limit(1));
-    const userDoc = await getDocs(queryUserWithUsername)
+    const userDoc = await getDocs(queryUserWithUsername[0])
     return userDoc;
 }
 

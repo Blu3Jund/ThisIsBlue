@@ -3,11 +3,10 @@ import PostFeed from "../../components/PostFeed";
 import {getUserWithUsername, postToJSON} from "../../lib/firebase1";
 import {collection, getDocs, getFirestore, limit, orderBy, query, where} from "@firebase/firestore";
 
-export async function getServerSideProps({queryProp}) {
+export async function getServerSideProps({ queryUsername }) {
+    const { username } = queryUsername;
 
-    const { username } = queryProp; //TODO something wrong here not sure what. but I cannot pass this argument
-
-    const userDoc = await getUserWithUsername(queryProp);
+    const userDoc = await getUserWithUsername(username);
 
     // If no user, short circuit to 404 page
     if (!userDoc) {
@@ -27,17 +26,17 @@ export async function getServerSideProps({queryProp}) {
             where('published', '==', true),
             orderBy('createdAt', "desc"),
             limit(5));
-        const querySnapshot = await getDocs(postQuery);
+        posts = (await getDocs(postQuery)).docs.map(postToJSON);
 
-        posts = querySnapshot.docs.map(postToJSON)
+        // posts = querySnapshot.docs.map(postToJSON)
     }
 
     return {
-        props: {user, posts}, // will be passed to the page component as props
+        props: { user, posts }, // will be passed to the page component as props
     };
 }
 
-export default function UserProfilePage({user, posts}) {
+export default function UserProfilePage({ user, posts }) {
     return (
         <main>
             <UserProfile user={user}/>
