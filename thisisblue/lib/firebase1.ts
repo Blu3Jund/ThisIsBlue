@@ -1,8 +1,8 @@
-import {getApps, initializeApp} from 'firebase/app';
-import {getAuth, onAuthStateChanged } from "firebase/auth";
-import {getFirestore} from "@firebase/firestore";
+import {getApp, getApps, initializeApp} from 'firebase/app';
+import {getAuth, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
+import {collection, getDocs, getFirestore, limit, query, where} from "@firebase/firestore";
 import {getStorage} from "@firebase/storage";
-import { collection } from "firebase/firestore"
+import {getDoc} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCF-MVXnzDMFGTbp9Q4XNjvYKeXD71D16I",
@@ -14,17 +14,56 @@ const firebaseConfig = {
     measurementId: "G-1VMRH36C6Y"
 }
 
-if (!getApps().length) {
-    initializeApp(firebaseConfig);
-    // Initialize other firebase products here
+
+function createFirebaseApp(config) {
+    try {
+        return getApp();
+    } catch {
+        return initializeApp(config);
+    }
 }
 
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = createFirebaseApp(firebaseConfig);
+
+//Auth exports
 export const auth = getAuth(firebaseApp);
+export const googleAuthProvider = new GoogleAuthProvider();
+
 export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 
-onAuthStateChanged(auth, user => {
-    // Check for user status
-});
+// onAuthStateChanged(auth, user => {
+//     // Check for user status
+// });
 // console.log('The firebase object: ' + firebase.getApps())
+
+//Helper functions
+
+/**`
+ * Gets a users/{uid} document with username
+ * @param  {string} username
+ */
+export async function getUserWithUsername(username) {
+
+
+    const usersRef = collection(firestore, 'users');
+    // const text = await getDoc(usersRef)
+    // console.log("userRef.id: " + await getDoc(usersRef));
+    const queryUserWithUsername = query(usersRef, where('username', '==', username), limit(1));
+    const userDoc = await getDocs(queryUserWithUsername)
+    return userDoc;
+}
+
+/**`
+ * Converts a firestore document to JSON
+ * @param  {DocumentSnapshot} doc
+ */
+export function postToJSON(doc) {
+    const data = doc.data();
+    return {
+        ...data,
+        // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+        createdAt: data.createdAt.toMillis(),
+        updatedAt: data.updatedAt.toMillis(),
+    };
+}

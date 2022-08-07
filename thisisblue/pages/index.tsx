@@ -3,6 +3,8 @@ import styles from '../styles/Home.module.css'
 import Loader from '../components/loader'
 import toast from "react-hot-toast";
 
+
+
 export default function Home() {
   return (
       <div>
