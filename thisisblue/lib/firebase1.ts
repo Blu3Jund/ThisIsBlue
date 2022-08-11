@@ -1,7 +1,8 @@
 import {getApp, initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider } from "firebase/auth";
-import {collection, getDocs, getFirestore, limit, query, where} from "@firebase/firestore";
+import {collection, getDocs, getFirestore, limit, query, Timestamp, where} from "@firebase/firestore";
 import {getStorage} from "@firebase/storage";
+import {getDoc} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCF-MVXnzDMFGTbp9Q4XNjvYKeXD71D16I",
@@ -30,6 +31,8 @@ export const googleAuthProvider = new GoogleAuthProvider();
 
 export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
+export const fromMillis = Timestamp.fromMillis;
+
 
 //Helper functions
 
@@ -39,11 +42,15 @@ export const storage = getStorage(firebaseApp);
  */
 export async function getUserWithUsername(username) {
 
+    let userDoc;
     const usersRef = collection(firestore, 'users');
-    // const text = await getDoc(usersRef)
-    // console.log("userRef.id: " + await getDoc(usersRef));
     const queryUserWithUsername = query(usersRef, where('username', '==', username), limit(1));
-    const userDoc = await getDocs(queryUserWithUsername[0])
+
+    const querySnapshot = await getDocs(queryUserWithUsername);
+    querySnapshot.forEach((doc) => {
+        // console.log(doc.id, " => ", doc.data());
+        userDoc = doc;
+    })
     return userDoc;
 }
 
@@ -56,7 +63,7 @@ export function postToJSON(doc) {
     return {
         ...data,
         // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-        createdAt: data.createdAt.toMillis(),
-        updatedAt: data.updatedAt.toMillis(),
+        createdAt: data?.createdAt.toMillis(),
+        updatedAt: data?.updatedAt.toMillis(),
     };
 }
