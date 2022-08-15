@@ -6,6 +6,7 @@ import {collectionGroup, getDocs, getFirestore, limit, orderBy, query, startAfte
 import {firestore, fromMillis, postToJSON} from "../lib/firebase1";
 import {useState} from "react";
 import PostFeed from "../components/PostFeed";
+import Metatags from "../components/Metatags";
 
 //Max post to query per page
 const LIMIT = 1;
@@ -58,6 +59,7 @@ export default function Home(props) {
 
   return (
       <main>
+          <Metatags title="Home Page" description="Get the latest posts on our site" />
           <PostFeed posts={posts}/>
 
           {!loading && !postsEnd && <button onClick={getMorePosts}>Load more</button> }

@@ -6,6 +6,7 @@ import { UserContext} from "../lib/context";
 import {doc, getDoc, writeBatch} from "firebase/firestore";
 import debounce from 'lodash.debounce';
 import {getFirestore} from "@firebase/firestore";
+import Metatags from "../components/Metatags";
 
 
 export default function EnterPage() {
@@ -16,6 +17,7 @@ export default function EnterPage() {
     // 3. user signed in, has username <SignOutButton />
         return (
         <main>
+            <Metatags title="Enter" description="Sign up for this amazing app!" />
             {user ? !username ? <UsernameForm /> : <SignOutButton /> : <SignInButton />}
         </main>
     )
