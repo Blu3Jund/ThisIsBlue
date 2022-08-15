@@ -1,4 +1,4 @@
-import styles from '@styles/Admin.module.css'
+import styles from '../../styles/Admin.module.css'
 import AuthCheck from "../../components/AuthCheck";
 import {collection, getFirestore, orderBy, query, serverTimestamp, setDoc} from "@firebase/firestore";
 import {auth, firestore} from "../../lib/firebase1";
@@ -92,10 +92,9 @@ function CreateNewPost() {
             <p>
                 <strong>Slug:</strong> {slug}
             </p>
-            <button type="submit" disabled={isValid} className={"btn-green"}>
+            <button type="submit" disabled={!isValid} className={"btn-green"}>
                 Create New Post
             </button>
-
         </form>
     )
 
