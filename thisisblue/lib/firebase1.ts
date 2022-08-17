@@ -2,8 +2,6 @@ import {getApp, initializeApp} from 'firebase/app';
 import {getAuth, GoogleAuthProvider } from "firebase/auth";
 import {collection, getDocs, getFirestore, limit, query, Timestamp, where} from "@firebase/firestore";
 import {getStorage} from "@firebase/storage";
-import {getDoc} from "firebase/firestore";
-import getFieldValue from "react-hook-form/dist/logic/getFieldValue";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCF-MVXnzDMFGTbp9Q4XNjvYKeXD71D16I",
