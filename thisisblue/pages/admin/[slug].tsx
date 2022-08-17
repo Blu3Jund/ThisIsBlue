@@ -1,13 +1,11 @@
 
-import Metatags from "../../components/Metatags";
 import AuthCheck from "../../components/AuthCheck";
 import {useState} from "react";
 import {useRouter} from "next/router";
-import {collection, getFirestore, serverTimestamp} from "@firebase/firestore";
+import {collection, serverTimestamp, updateDoc} from "@firebase/firestore";
 import {auth, firestore} from "../../lib/firebase1";
-import {doc, getDoc} from "firebase/firestore";
-import {useDocumentData, useDocumentDataOnce} from "react-firebase-hooks/firestore";
-import {inspect} from "util";
+import {doc} from "firebase/firestore";
+import {useDocumentData} from "react-firebase-hooks/firestore";
 import styles from "../../styles/Admin.module.css"
 import {useForm} from "react-hook-form";
 import ReactMarkdown from "react-markdown";
@@ -30,15 +28,8 @@ function PostManager() {
 
 
     const postRef = doc(collection(doc(collection(firestore, 'users'), auth.currentUser.uid), 'posts'), slug.toString());
-    //TODO fix this, postRef is not a function error in update post (line 66)
-    /* the console.log below gives the following in the console
-        postRef: [object Object]
-        postRef.type: document
 
-        Also the /admin/posttitle is not working properly I can only acces it after a new compile while the page is open
-     */
-    console.log(`postRef: ${postRef}\n postRef.type: ${postRef.type}`)
-    const [post] = useDocumentDataOnce(postRef);
+    const [post] = useDocumentData(postRef);
 
     return (
         <main className = {styles.container}>
@@ -59,9 +50,7 @@ function PostManager() {
                     </aside>
                 </>
             )}
-
         </main>
-
     );
 }
 
@@ -69,7 +58,7 @@ function PostForm({defaultValues, postRef, preview}){
     const { register, handleSubmit, reset, watch } = useForm({defaultValues, mode: 'onChange'});
 
     const updatePost = async ({content, published}) => {
-        await postRef.update({
+        await updateDoc(postRef, {
             content,
             published,
             updatedAt: serverTimestamp(),
@@ -89,9 +78,9 @@ function PostForm({defaultValues, postRef, preview}){
                 </div>
             )}
             <div className={preview ? styles.hidden : styles.controls}>
-                <textarea name="content" {...register}></textarea>
+                <textarea name='content' {...register('content')}></textarea>
                  <fieldset>
-                     <input className={styles.checkbox} name="published" type="checkbox" {...register}/>
+                     <input className={styles.checkbox} name="published" type="checkbox" {...register('published')}/>
                      <label>Published</label>
                  </fieldset>
 
