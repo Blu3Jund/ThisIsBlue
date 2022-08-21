@@ -2,8 +2,7 @@
 import {useState} from "react";
 import Loader from "./loader";
 import {auth, storage} from "../lib/firebase1";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage"
-import {uploadBytesResumable} from "@firebase/storage/dist/storage";
+import {getDownloadURL, ref, uploadBytes, uploadBytesResumable} from "firebase/storage";
 
 export default function ImageUploader() {
     const [uploading, setUploading] = useState(false);
@@ -13,7 +12,8 @@ export default function ImageUploader() {
     // Creates a Firebase Upload Task
     const uploadFile = async (e) => {
         // Get the file
-        const file = Array.from(e.target.files)[0];
+        const file: any = Array.from(e.target.files)[0];
+        console.log(file)
         const extension = file.type.split('/')[1];
 
         //Makes reference to the storage bucket location
