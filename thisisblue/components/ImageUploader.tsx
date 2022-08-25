@@ -2,11 +2,11 @@
 import {useState} from "react";
 import Loader from "./loader";
 import {auth, storage} from "../lib/firebase1";
-import {getDownloadURL, ref, uploadBytes, uploadBytesResumable} from "firebase/storage";
+import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
 
 export default function ImageUploader() {
     const [uploading, setUploading] = useState(false);
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState('0');
     const [downloadURL, setDownloadURL] = useState(null);
 
     // Creates a Firebase Upload Task
