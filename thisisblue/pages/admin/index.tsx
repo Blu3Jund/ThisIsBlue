@@ -26,7 +26,7 @@ export default function AdminPostsPage(props) {
 
 function PostList() {
 
-    const ref = collection(doc(collection(getFirestore(), 'users'), auth.currentUser.uid), 'posts');
+    const ref = collection(doc(collection(firestore, 'users'), auth.currentUser.uid), 'posts');
     const queryPostlist = query(ref, orderBy('createdAt'))
     const [querySnapshot]  = useCollection(queryPostlist);
 
@@ -58,7 +58,7 @@ function CreateNewPost() {
     const createPost = async (e) => {
         e.preventDefault();
         const uid = auth.currentUser.uid;
-        const ref = doc(collection(doc(collection(getFirestore(), 'users'), uid), 'posts'), slug);
+        const ref = doc(collection(doc(collection(firestore, 'users'), uid), 'posts'), slug);
 
         // TODO give all fields a default value here
         const data = {

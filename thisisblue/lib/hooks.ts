@@ -13,7 +13,7 @@ export function useUserData() {
         let unsubscribe;
 
         if (user) {
-            const ref = doc(getFirestore(), "users", user.uid);
+            const ref = doc(firestore, "users", user.uid);
             unsubscribe = onSnapshot(ref, (doc) => {
                 setUsername(doc.data()?.username);
             });

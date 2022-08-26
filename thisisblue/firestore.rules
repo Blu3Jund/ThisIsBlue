@@ -5,44 +5,44 @@ service cloud.firestore {
 
       // Required for collection group queries
       match /posts/{postId} {
-      	allow read;
+        allow read;
       }
 
       match /users/{userId} {
-      	allow read;
+        allow read;
         allow create: if isValidUser(userId);
       }
 
       match /usernames/{username} {
-      	allow read;
+        allow read;
         allow create: if isValidUsername(username);
       }
 
 
       match /users/{userId}/posts/{postId} {
-      	allow read;
+        allow read;
         allow create: if canCreatePost(userId);
         allow update: if canUpdatePost(userId) || canIncrementHearts(userId, postId);
         allow delete: if request.auth.uid == userId;
+        
       }
 
       match /users/{userId}/posts/{postId}/hearts/{heartId} {
-      	allow read;
+        allow read;
         allow write: if request.auth.uid == heartId;
       }
 
       // Users
-
       function isValidUser(userId) {
         let isOwner = request.auth.uid == userId;
-      	let username = request.resource.data.username;
+        let username = request.resource.data.username;
         let createdValidUsername = existsAfter(/databases/$(database)/documents/usernames/$(username));
 
         return isOwner && createdValidUsername;
       }
 
       function isValidUsername(username) {
-		    let isOwner = request.auth.uid == request.resource.data.uid;
+        let isOwner = request.auth.uid == request.resource.data.uid;
         let isValidLength = username.size() >= 3 && username.size() <= 15;
         let isValidUserDoc = getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data.username == username;
 
@@ -50,7 +50,6 @@ service cloud.firestore {
       }
 
       // Posts
-
       function canCreatePost(userId) {
         let isOwner = request.auth.uid == userId;
         let isNow = request.time == request.resource.data.createdAt;
@@ -58,12 +57,12 @@ service cloud.firestore {
         let username = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
         let usernameMatches = username == request.resource.data.username;
 
-      	return isOwner && isNow && isValidContent && usernameMatches;
+        return isOwner && isNow && isValidContent && usernameMatches;
       }
 
       function canUpdatePost(userId) {
         let isOwner = request.auth.uid == userId;
-      	let isNow = request.time == request.resource.data.updatedAt;
+        let isNow = request.time == request.resource.data.updatedAt;
         let isValidContent = request.resource.data.content.size() < 20000;
         let doesNotUpdateForbidden = !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'username', 'heartCount']);
 
@@ -71,25 +70,20 @@ service cloud.firestore {
       }
 
       // Hearts
-
       function canIncrementHearts(userId, postId) {
-		    let hasValidFields = request.resource.data.diff(resource.data).affectedKeys().hasOnly(['heartCount']);
+        let hasValidFields = request.resource.data.diff(resource.data).affectedKeys().hasOnly(['heartCount']);
         let currentUser = request.auth.uid;
-		    let heartDocExistsAfter = existsAfter(/databases/$(database)/documents/users/$(userId)/posts/$(postId)/hearts/$(currentUser));
+        let heartDocExistsAfter = existsAfter(/databases/$(database)/documents/users/$(userId)/posts/$(postId)/hearts/$(currentUser));
         let heartDocExists = exists(/databases/$(database)/documents/users/$(userId)/posts/$(postId)/hearts/$(currentUser));
 
         let heartDocAdded= !heartDocExists && heartDocExistsAfter;
         let heartDocRemoved = heartDocExists && !heartDocExistsAfter;
-
 
         let countChange = request.resource.data.heartCount - resource.data.heartCount;
         let validChange = countChange == 1 || countChange == -1;
 
         return hasValidFields && validChange && ( countChange == 1 ? heartDocAdded : heartDocRemoved );
       }
-
-
-
     }
 
   }

@@ -69,11 +69,11 @@ function UsernameForm() {
         e.preventDefault();
 
         // Create refs for both documents
-        const userDoc = doc(getFirestore(), `users`, user.uid)
-        const usernameDoc = doc(getFirestore(), `usernames`, formValue);
+        const userDoc = doc(firestore, `users`, user.uid)
+        const usernameDoc = doc(firestore, `usernames`, formValue);
 
         // Commit both docs together as a batch write.
-        const batch = writeBatch(getFirestore());
+        const batch = writeBatch(firestore);
         batch.set(userDoc, { username: formValue, photoURL: user.photoURL, displayName: user.displayName });
         batch.set(usernameDoc, { uid: user.uid });
 
@@ -110,7 +110,7 @@ function UsernameForm() {
     const checkUsername = useCallback(
         debounce(async (username) => {
             if (username.length >= 3) {
-                const ref = doc(getFirestore(), `usernames`, username);
+                const ref = doc(firestore, `usernames`, username);
                 const snap = await getDoc(ref);
                 console.log(`Firestore read executed!`, snap.exists());
                 setIsValid(!snap.exists());

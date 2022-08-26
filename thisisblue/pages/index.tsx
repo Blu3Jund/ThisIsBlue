@@ -14,7 +14,7 @@ const LIMIT = 1;
 export async function getServerSideProps(context) {
 
     const postQuery = query(
-        collectionGroup(getFirestore(), 'posts'),
+        collectionGroup(firestore, 'posts'),
         where('published', '==', true),
         orderBy('createdAt', "desc"),
         limit(LIMIT));
@@ -39,7 +39,7 @@ export default function Home(props) {
 
         const cursor = typeof last.createdAt === 'number' ? fromMillis(last.createdAt) : last.createdAt;
         const morePostsQuery = query(
-            collectionGroup(getFirestore(), 'posts'),
+            collectionGroup(firestore, 'posts'),
             where('published', '==', true),
             orderBy('createdAt', "desc"),
             startAfter(cursor),
