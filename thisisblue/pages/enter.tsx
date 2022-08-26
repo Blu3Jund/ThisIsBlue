@@ -5,7 +5,6 @@ import {useCallback, useContext, useEffect, useState} from 'react';
 import { UserContext} from "../lib/context";
 import {doc, getDoc, writeBatch} from "firebase/firestore";
 import debounce from 'lodash.debounce';
-import {getFirestore} from "@firebase/firestore";
 import Metatags from "../components/Metatags";
 
 

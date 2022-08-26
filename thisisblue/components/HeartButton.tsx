@@ -2,7 +2,7 @@
 import {auth, firestore} from "../lib/firebase1";
 import {doc, increment, writeBatch} from "firebase/firestore";
 import {useDocument} from "react-firebase-hooks/firestore";
-import {collection, getFirestore} from "@firebase/firestore";
+import {collection} from "@firebase/firestore";
 
 export default function Heart({postRef}){
     // Listen to heart document for currently logged in user
