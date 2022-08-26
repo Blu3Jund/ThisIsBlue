@@ -1,6 +1,6 @@
 import styles from '../../styles/Post.module.css';
 import {firestore, getUserWithUsername, postToJSON} from "../../lib/firebase1";
-import {collection, collectionGroup, getDocs, getFirestore} from "@firebase/firestore";
+import {collection, collectionGroup, getDocs} from "@firebase/firestore";
 import {doc, getDoc} from "firebase/firestore";
 import {useDocumentData} from "react-firebase-hooks/firestore";
 import PostContent from "../../components/PostContent";

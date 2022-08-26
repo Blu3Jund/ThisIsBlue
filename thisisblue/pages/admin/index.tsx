@@ -1,6 +1,6 @@
 import styles from '../../styles/Admin.module.css'
 import AuthCheck from "../../components/AuthCheck";
-import {collection, getFirestore, orderBy, query, serverTimestamp, setDoc} from "@firebase/firestore";
+import {collection, orderBy, query, serverTimestamp, setDoc} from "@firebase/firestore";
 import {auth, firestore} from "../../lib/firebase1";
 import {doc} from "firebase/firestore";
 import {useCollection} from "react-firebase-hooks/firestore";

@@ -2,7 +2,7 @@ import styles from '../styles/Home.module.css'
 
 import Loader from '../components/loader'
 import toast from "react-hot-toast";
-import {collectionGroup, getDocs, getFirestore, limit, orderBy, query, startAfter, where} from "@firebase/firestore";
+import {collectionGroup, getDocs, limit, orderBy, query, startAfter, where} from "@firebase/firestore";
 import {firestore, fromMillis, postToJSON} from "../lib/firebase1";
 import {useState} from "react";
 import PostFeed from "../components/PostFeed";
@@ -60,6 +60,9 @@ export default function Home(props) {
   return (
       <main>
           <Metatags title="Home Page" description="Get the latest posts on our site" />
+          <div className="card card-info">
+              <p>Sign up for an 👨‍🎤 account, ✍️ write posts, then 💞 heart content created by other users. All public content is server-rendered and search-engine optimized.</p>
+          </div>
           <PostFeed posts={posts}/>
 
           {!loading && !postsEnd && <button onClick={getMorePosts}>Load more</button> }
